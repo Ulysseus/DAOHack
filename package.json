@@ -1,0 +1,14 @@
+{
+  "name": "DAOHack",
+  "version": "1.0.0",
+  "description": "Attempt to recreate the rentracy bug attack to understand it better",
+  "main": "DAO.js",
+  "author": "D Travlos",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@truffle/contract": "^4.3.2",
+    "truffle": "^5.1.57",
+    "web3": "^1.3.0"
+  }
+}
