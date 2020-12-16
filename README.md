@@ -38,7 +38,7 @@ Clone the resposity change directory to the respository.
 I used VisualCode with the solidity extension.
 In a terminal window type
 
-`ganache-cli -d -i 66`
+```ganache-cli -d -i 66
 
 The i is the code that identifies the network.
 -d means always generate the same accounts and deploy contracts to the same address's
