@@ -73,16 +73,18 @@ migrate reset in truffle console
 Should resolve it in most cases.
 
 Debugger commands are as follows
+```
 b attack.sol:55 will set a breakpoint at line 55 of attack.sol
 B all will remove all breakpoints
 Then c will run until the breakpoint is hit
 v will show local variables
-\:<|expression|> will show that <|expression|>
-\+:<|expression|> will add a watch expression. -:<|expresssion|> will remove it
+:<|expression|> will show that <|expression|>
++:<|expression|> will add a watch expression. -:<|expresssion|> will remove it
 ? will list all watchs and breakpoints
 ; will show low level opcodes and the stack, I am unsure how to switch it off once it starts
 h shows help
 q quits debugger
+```
 
 Now create an interaface for the contracts
 
