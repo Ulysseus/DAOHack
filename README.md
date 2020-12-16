@@ -1,4 +1,4 @@
-# Detailed run through a reentrancy bug attrack
+# Detailed run through of a reentrancy bug attrack
 
 In 2016 I remember watching the DAO contract getting drained of all its Ether. In 2018 I did the Consensus Solidity course. I understand what a re-entrancy bug is, but its always bothered me how exactly did the attacker get away with so much Ether.
 
