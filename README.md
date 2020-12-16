@@ -217,6 +217,12 @@ Once deposit contract has some Ether in it
 
 ```exec ./DAO.js```
 
+The best technical write ups I have found are the following
+
+https://hackingdistributed.com/2016/06/18/analysis-of-the-dao-exploit/
+
+https://vessenes.com/deconstructing-thedao-attack-a-brief-code-tour/
+
 
 
 
