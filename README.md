@@ -44,11 +44,15 @@ The i is the code that identifies the network.
 -d means always generate the same accounts and deploy contracts to the same address's
 This is critical as nothing will work in the code unless this flag is used.
 In another terminal or in the terminal window in VS type
+
 `truffle console --network development`
+
 This will bring up the truffle console
 the file truffle-config.js has all the setting for this netwrok and the compiler being used.
 Now type
+
 `migrate reset` 
+
 this will compile and deploy four contracts to the ganache instance
 Migrations
 Deposit
@@ -81,12 +85,16 @@ h shows help
 q quits it.
 
 Now create an interaface for the contracts
-`d = await Deposit.deployed()`
-`A = await AttackA.deployed()`
-`B = await AttackB.deployed()`
+
+```
+d = await Deposit.deployed()
+A = await AttackA.deployed()
+B = await AttackB.deployed()
+```
 
  Now send d some Ether
- `await d.sendTransaction({from:accounts[0],value:web3.utils.toWei('15', 'ether')})`
+ 
+ ```await d.sendTransaction({from:accounts[0],value:web3.utils.toWei('15', 'ether')})
  The attack withdrew 258 ether each cycle
  
  Now send A 258 wei worth of Tokens
